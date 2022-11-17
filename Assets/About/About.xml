@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Bounce Gun</name>
+  <author>Halituis Amaricanous</author>
+  <url>
+  </url>
+  <supportedVersions>
+	<li>1.4</li>
+  </supportedVersions>
+  <packageId>HalituisAmaricanous.VSW</packageId>
+  <description>Devlopment Description Will Add sevral new types of Spacer-era weapons to find and aquire in reimworld, featuring the unique gimmic of bounceing between enemies like a ping-pong ball trying to rack up as much points as possible.</description>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>Ludeon.RimWorld</li>
+  </loadAfter>
+</ModMetaData>

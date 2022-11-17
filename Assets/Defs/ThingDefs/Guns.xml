@@ -1,0 +1,453 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<BounceGun.RicochetGunDef Name="VSWBG_Gun" ParentName="BaseHumanMakeableGun" Abstract="true">
+		<thingClass>BounceGun.RicochetGun</thingClass>
+		<techLevel>Spacer</techLevel>
+		<soundInteract>VSWBG_Interact_BounceGun</soundInteract>
+		<!--Change with custom sound-->
+		<recipeMaker Inherit="False" />
+		<comps>
+			<li Class="CompProperties_Art">
+				<nameMaker>NamerArtWeaponMelee</nameMaker>
+				<descriptionMaker>ArtDescription_WeaponMelee</descriptionMaker>
+				<minQualityForArtistic>Excellent</minQualityForArtistic>
+			</li>
+		</comps>
+		<thingSetMakerTags>
+			<li>RewardStandardLowFreq</li>
+			<li>RewardStandardQualitySuper</li>
+		</thingSetMakerTags>
+		<weaponTags>
+			<li>SpacerGun</li>
+			<li>Ricochetgun</li>
+		</weaponTags>
+		<tradeTags>
+			<li>WeaponRanged</li>
+		</tradeTags>
+	</BounceGun.RicochetGunDef>
+
+	<!--========== Repulse Rifle ============-->
+
+	<BounceGun.RicochetGunDef ParentName="VSWBG_Gun">
+		<defName>VSWBG_Gun_RepulseRifle</defName>
+		<label>Repulse Rifle</label>
+		<description>This spacer tech Ricochet Rifle operates via a Series of High End Fuses which guides excited projectiles down its barrel and into the line of fire of its targets, the particles bounce off of enemies and surfaces as the projectiles attempts to make as much contact as much as it can, damaging as much as it can along the way.</description>
+		<techLevel>Spacer</techLevel>
+		<graphicData>
+			<texPath>Things/Item/Equipment/WeaponRanged/RepulseRifle</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+
+		<statBases>
+			<MarketValue>2300</MarketValue>
+			<Mass>4.6</Mass>
+			<AccuracyTouch>0.55</AccuracyTouch>
+			<AccuracyShort>0.64</AccuracyShort>
+			<AccuracyMedium>0.7</AccuracyMedium>
+			<AccuracyLong>0.5</AccuracyLong>
+			<RangedWeapon_Cooldown>1.80</RangedWeapon_Cooldown>
+		</statBases>
+
+		<costList>
+			<Steel>50</Steel>
+			<Uranium>20</Uranium>
+			<ComponentSpacer>4</ComponentSpacer>
+		</costList>
+
+		<weaponClasses>
+			<li>RangedLight</li>
+		</weaponClasses>
+
+		<verbs>
+			<li>
+				<verbClass>Verb_Shoot</verbClass>
+				<hasStandardCommand>true</hasStandardCommand>
+				<defaultProjectile>VSWBG_Bullet_RepulseRifle_ParticlePulsebeam</defaultProjectile>
+				<warmupTime>3.0</warmupTime>
+				<range>30.9</range>
+				<ticksBetweenBurstShots>5</ticksBetweenBurstShots>
+				<burstShotCount>3</burstShotCount>
+				<soundCast>VSWBG_BounceGunShot_Light</soundCast>
+				<!--Change with custom sound-->
+				<soundCastTail>GunTail_Medium</soundCastTail>
+				<muzzleFlashScale>9</muzzleFlashScale>
+			</li>
+		</verbs>
+		<tools>
+			<li>
+				<label>stock</label>
+				<capacities>
+					<li>Blunt</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+			<li>
+				<label>barrel</label>
+				<capacities>
+					<li>Blunt</li>
+					<li>Poke</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+		</tools>
+	</BounceGun.RicochetGunDef>
+
+
+	<!--========== Repulse Pistol ============-->
+
+	<BounceGun.RicochetGunDef ParentName="VSWBG_Gun">
+		<defName>VSWBG_Gun_RepulsePistol</defName>
+		<label>Repulse Pistol</label>
+		<description>This spacer tech Ricochet Pistol uses a revolving cylinder filled with pulse based ammo Infused with excited particles that ricochet off of enemies and even surfaces, particles will be more drawn to other movement heavy materials, but are more likely to rebound with more higher skill users. Weapons of this type are more fit for early explorers that can easily spray and pray across a forest and let the particles find their way to their hidden foes.</description>
+
+		<graphicData>
+			<texPath>Things/Item/Equipment/WeaponRanged/RepulsePistol</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+
+		<statBases>
+			<MarketValue>1800</MarketValue>
+			<Mass>2.5</Mass>
+			<AccuracyTouch>0.5</AccuracyTouch>
+			<AccuracyShort>0.67</AccuracyShort>
+			<AccuracyMedium>0.7</AccuracyMedium>
+			<AccuracyLong>0.6</AccuracyLong>
+			<RangedWeapon_Cooldown>1.45</RangedWeapon_Cooldown>
+		</statBases>
+
+		<costList>
+			<Steel>45</Steel>
+			<Uranium>8</Uranium>
+			<ComponentSpacer>2</ComponentSpacer>
+		</costList>
+
+		<weaponTags>
+			<li>SpacerGun</li>
+			<li>Revolver</li>
+			<li>Ricochetgun</li>
+		</weaponTags>
+
+		<weaponClasses>
+			<li>RangedLight</li>
+		</weaponClasses>
+
+		<verbs>
+			<li>
+				<verbClass>Verb_Shoot</verbClass>
+				<hasStandardCommand>true</hasStandardCommand>
+				<defaultProjectile>VSWBG_Bullet_RepulsePistol_ParticlePulsebeam</defaultProjectile>
+				<warmupTime>2.0</warmupTime>
+				<range>25.9</range>
+				<soundCast>VSWBG_BounceGunShot_Light</soundCast>
+				<!--Change with custom sound-->
+				<soundCastTail>GunTail_Medium</soundCastTail>
+				<muzzleFlashScale>9</muzzleFlashScale>
+			</li>
+		</verbs>
+		<tools>
+			<li>
+				<label>stock</label>
+				<capacities>
+					<li>Blunt</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+			<li>
+				<label>barrel</label>
+				<capacities>
+					<li>Blunt</li>
+					<li>Poke</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+		</tools>
+	</BounceGun.RicochetGunDef>
+
+	<!--========== Repulse Sniper ============-->
+
+	<BounceGun.RicochetGunDef ParentName="VSWBG_Gun">
+		<defName>VSWBG_Gun_RepulseSniper</defName>
+		<label>repulse sniper</label>
+		<description>This spacer tech Ricochet Sniper rifles fires a much stronger combination of particles from its revolving cylinder, particles supercharged from ammo exertion are much less likely to score more ricochets and recoil hits, but with a much more veteran shooter should still be able to make good hits that can reach multiple targets.</description>
+		<graphicData>
+			<texPath>Things/Item/Equipment/WeaponRanged/RepulseSniper</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<equippedAngleOffset>45</equippedAngleOffset>
+		<soundInteract>VSWBG_Interact_BounceGunHeavy</soundInteract>
+		<!--Change with custom sound-->
+		<statBases>
+			<MarketValue>2800</MarketValue>
+			<Mass>5.5</Mass>
+			<AccuracyTouch>0.5</AccuracyTouch>
+			<AccuracyShort>0.4</AccuracyShort>
+			<AccuracyMedium>0.6</AccuracyMedium>
+			<AccuracyLong>0.85</AccuracyLong>
+			<RangedWeapon_Cooldown>6.5</RangedWeapon_Cooldown>
+		</statBases>
+
+		<costList>
+			<Steel>50</Steel>
+			<Uranium>40</Uranium>
+			<ComponentSpacer>5</ComponentSpacer>
+		</costList>
+
+		<weaponClasses>
+			<li>LongShots</li>
+			<li>RangedHeavy</li>
+		</weaponClasses>
+
+		<verbs>
+			<li>
+				<verbClass>Verb_Shoot</verbClass>
+				<hasStandardCommand>true</hasStandardCommand>
+				<defaultProjectile>VSWBG_Bullet_RepulsePistol_ParticlePulsebeam</defaultProjectile>
+				<warmupTime>7.0</warmupTime>
+				<range>75.9</range>
+				<soundCast>VSWBG_BounceGunShot_Heavy</soundCast>
+				<!--Change with custom sound-->
+				<soundCastTail>GunTail_Medium</soundCastTail>
+				<muzzleFlashScale>9</muzzleFlashScale>
+			</li>
+		</verbs>
+		<tools>
+			<li>
+				<label>stock</label>
+				<capacities>
+					<li>Blunt</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+			<li>
+				<label>barrel</label>
+				<capacities>
+					<li>Blunt</li>
+					<li>Poke</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+		</tools>
+	</BounceGun.RicochetGunDef>
+
+	<!--========== Repulse Repeater ============-->
+
+	<BounceGun.RicochetGunDef ParentName="VSWBG_Gun">
+		<defName>VSWBG_Gun_RepulseRepeater</defName>
+		<label>repulse repeater</label>
+		<description>This Spacer tech Ricochet multi-barreled weapon fires an array of small supercharged particles that bounce and ricochet off of surfaces and even enemies. The fuse fed automatic firing mechanism can fire much more than other traditional ricochet weapons at the cost of the weight of the weapon and not being able to aim properly, It should come as no surprise as such a pinnacle of technology is highly sought after for their immense destruction and damage capabilities.</description>
+		<techLevel>Spacer</techLevel>
+		<graphicData>
+			<texPath>Things/Item/Equipment/WeaponRanged/RepulseRepeater</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<soundInteract>VSWBG_Interact_BounceGunHeavy</soundInteract>
+		<!--Change with custom sound-->
+		<statBases>
+			<MarketValue>3300</MarketValue>
+			<Mass>8</Mass>
+			<AccuracyTouch>0.5</AccuracyTouch>
+			<AccuracyShort>0.4</AccuracyShort>
+			<AccuracyMedium>0.5</AccuracyMedium>
+			<AccuracyLong>0.13</AccuracyLong>
+			<RangedWeapon_Cooldown>5.00</RangedWeapon_Cooldown>
+		</statBases>
+
+		<costList>
+			<Steel>50</Steel>
+			<Uranium>60</Uranium>
+			<ComponentSpacer>4</ComponentSpacer>
+		</costList>
+
+		<weaponClasses>
+			<li>RangedHeavy</li>
+		</weaponClasses>
+
+		<verbs>
+			<li>
+				<verbClass>Verb_Shoot</verbClass>
+				<hasStandardCommand>true</hasStandardCommand>
+				<defaultProjectile>VSWBG_Bullet_RepulseRepeater_ParticlePulsebeam</defaultProjectile>
+				<warmupTime>7.0</warmupTime>
+				<range>20.9</range>
+				<ticksBetweenBurstShots>3</ticksBetweenBurstShots>
+				<burstShotCount>10</burstShotCount>
+				<soundCast>VSWBG_BounceGunShot_Heavy</soundCast>
+				<!--Change with custom sound-->
+				<soundCastTail>GunTail_Medium</soundCastTail>
+				<muzzleFlashScale>9</muzzleFlashScale>
+			</li>
+		</verbs>
+		<equippedStatOffsets>
+			<MoveSpeed>-0.05</MoveSpeed>
+		</equippedStatOffsets>
+		<tools>
+			<li>
+				<label>stock</label>
+				<capacities>
+					<li>Blunt</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+			<li>
+				<label>barrel</label>
+				<capacities>
+					<li>Blunt</li>
+					<li>Poke</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+		</tools>
+	</BounceGun.RicochetGunDef>
+
+	<!--========== Refractor Scattergun ============-->
+
+	<BounceGun.RicochetGunDef ParentName="VSWBG_Gun">
+		<defName>VSWBG_Gun_RefractorScattergun</defName>
+		<label>refractor scattergun</label>
+		<description>This spacer tech Ricochet Shotgun fires an array of devastating particles that bounce and recoil off of enemies and surfaces, particles from this weapon are split even smaller dealing much less damage, but covering a much wider range of potential enemies.</description>
+		<techLevel>Spacer</techLevel>
+		<graphicData>
+			<texPath>Things/Item/Equipment/WeaponRanged/RefracterScattergun</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<soundInteract>VSWBG_Interact_BounceGunShotgun</soundInteract>
+		<!--Change with custom sound-->
+		<statBases>
+			<MarketValue>2400</MarketValue>
+			<Mass>4.6</Mass>
+			<AccuracyTouch>0.8</AccuracyTouch>
+			<AccuracyShort>0.75</AccuracyShort>
+			<AccuracyMedium>0.3</AccuracyMedium>
+			<AccuracyLong>0.1</AccuracyLong>
+			<RangedWeapon_Cooldown>2.2</RangedWeapon_Cooldown>
+		</statBases>
+
+		<costList>
+			<Steel>50</Steel>
+			<Uranium>50</Uranium>
+			<ComponentSpacer>4</ComponentSpacer>
+		</costList>
+
+		<weaponClasses>
+			<li>ShortShots</li>
+		</weaponClasses>
+
+		<verbs>
+			<li>
+				<verbClass>Verb_Shoot</verbClass>
+				<hasStandardCommand>true</hasStandardCommand>
+				<defaultProjectile>VSWBG_Bullet_RefractorScattergun_ParticlePulsebeam</defaultProjectile>
+				<warmupTime>3.0</warmupTime>
+				<range>25.9</range>
+				<ticksBetweenBurstShots>0.01</ticksBetweenBurstShots>
+				<burstShotCount>3</burstShotCount>
+				<soundCast>VSWBG_BounceGunShot_Light</soundCast>
+				<!--Change with custom sound-->
+				<soundCastTail>GunTail_Medium</soundCastTail>
+				<muzzleFlashScale>9</muzzleFlashScale>
+			</li>
+		</verbs>
+		<tools>
+			<li>
+				<label>stock</label>
+				<capacities>
+					<li>Blunt</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+			<li>
+				<label>barrel</label>
+				<capacities>
+					<li>Blunt</li>
+					<li>Poke</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+		</tools>
+	</BounceGun.RicochetGunDef>
+	
+	<!--========== Refractor Cannon ============-->
+
+	<BounceGun.RicochetGunDef ParentName="VSWBG_Gun">
+		<defName>VSWBG_Gun_RefractorCannon</defName>
+		<label>repulse repeater</label>
+		<description>This forge Ricochet Refractor fires bolts of highly damaging particles at the target which can ricochet off of surfaces and even enemies, in an attempt to do as much damage before they are extinguished. The heavy weapon charged by multiple partial auto-loaders is capable of doing immense damage with the added benefit of a multi-barreled gun. The result is a far more devastating weapon not legally approved by the weapons manufacturer but still a great weapon to have when dealing with dozens of squads at once.</description>
+		<techLevel>Spacer</techLevel>
+		<graphicData>
+			<texPath>Things/Item/Equipment/WeaponRanged/RefractorCannon</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<equippedAngleOffset>45</equippedAngleOffset>
+		<soundInteract>VSWBG_Interact_BounceGunHeavy</soundInteract>
+		<!--Change with custom sound-->
+		<statBases>
+			<MarketValue>3800</MarketValue>
+			<Mass>10</Mass>
+			<AccuracyTouch>0.5</AccuracyTouch>
+			<AccuracyShort>0.35</AccuracyShort>
+			<AccuracyMedium>0.25</AccuracyMedium>
+			<AccuracyLong>0.2</AccuracyLong>
+			<RangedWeapon_Cooldown>5.7</RangedWeapon_Cooldown>
+		</statBases>
+
+		<costList>
+			<Steel>80</Steel>
+			<Uranium>60</Uranium>
+			<ComponentSpacer>8</ComponentSpacer>
+		</costList>
+
+		<weaponClasses>
+			<li>RangedHeavy</li>
+		</weaponClasses>
+
+		<verbs>
+			<li>
+				<verbClass>Verb_Shoot</verbClass>
+				<hasStandardCommand>true</hasStandardCommand>
+				<defaultProjectile>VSWBG_Bullet_RefractorCannon_ParticlePulsebeam</defaultProjectile>
+				<warmupTime>7.5</warmupTime>
+				<range>20.9</range>
+				<ticksBetweenBurstShots>5</ticksBetweenBurstShots>
+				<burstShotCount>10</burstShotCount>
+				<soundCast>VSWBG_BounceGunShot_Heavy</soundCast>
+				<!--Change with custom sound-->
+				<soundCastTail>GunTail_Medium</soundCastTail>
+				<muzzleFlashScale>9</muzzleFlashScale>
+			</li>
+		</verbs>
+		<equippedStatOffsets>
+			<MoveSpeed>-0.5</MoveSpeed>
+		</equippedStatOffsets>
+		<tools>
+			<li>
+				<label>stock</label>
+				<capacities>
+					<li>Blunt</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+			<li>
+				<label>barrel</label>
+				<capacities>
+					<li>Blunt</li>
+					<li>Poke</li>
+				</capacities>
+				<power>9</power>
+				<cooldownTime>2</cooldownTime>
+			</li>
+		</tools>
+	</BounceGun.RicochetGunDef>
+
+</Defs>
