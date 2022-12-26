@@ -376,12 +376,12 @@
 			</li>
 		</tools>
 	</BounceGun.RicochetGunDef>
-	
+
 	<!--========== Refractor Cannon ============-->
 
 	<BounceGun.RicochetGunDef ParentName="VSWBG_Gun">
 		<defName>VSWBG_Gun_RefractorCannon</defName>
-		<label>repulse repeater</label>
+		<label>repulse refractor</label>
 		<description>This forge Ricochet Refractor fires bolts of highly damaging particles at the target which can ricochet off of surfaces and even enemies, in an attempt to do as much damage before they are extinguished. The heavy weapon charged by multiple partial auto-loaders is capable of doing immense damage with the added benefit of a multi-barreled gun. The result is a far more devastating weapon not legally approved by the weapons manufacturer but still a great weapon to have when dealing with dozens of squads at once.</description>
 		<techLevel>Spacer</techLevel>
 		<graphicData>

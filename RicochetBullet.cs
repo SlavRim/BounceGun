@@ -5,8 +5,17 @@ public class RicochetBullet : Bullet
     public RicochetBullet() { }
 
     public virtual bool RicochetChance(float chance) => Rand.Chance(chance);
+    public virtual LocalTargetInfo FindNextTarget()
+    {
+        var pawns = Map.listerThings.ThingsInGroup(ThingRequestGroup.Pawn);
 
-    protected readonly List<LocalTargetInfo> previousTargets = new();
+        LocalTargetInfo nextTarget = pawns
+                .OrderBy(x => x.Position.DistanceTo(Position))
+                .FirstOrDefault(x => !previousTargets.Contains(x) && CanHit(x, out _));
+        return nextTarget;
+    }
+
+    protected readonly List<Thing> previousTargets = new();
 
     public RicochetBulletDef Def => def as RicochetBulletDef;
     public virtual SkillDef AccuracySkill => SkillDefOf.Shooting;
@@ -24,22 +33,23 @@ public class RicochetBullet : Bullet
     }
 
     public Verb_Shoot Verb { get; protected set; }
-    public Pawn User => launcher as Pawn;
+    public virtual Pawn User => launcher as Pawn;
     public LocalTargetInfo Shooter { get; protected set; } = LocalTargetInfo.Invalid;
     public LocalTargetInfo InitialTarget { get; protected set; } = LocalTargetInfo.Invalid;
+    public LocalTargetInfo PreviousTarget { get; protected set; } = LocalTargetInfo.Invalid;
     public LocalTargetInfo CurrentTarget { get; protected set; } = LocalTargetInfo.Invalid;
     public override int DamageAmount => Mathf.RoundToInt(base.DamageAmount * weaponDamageMultiplier);
 
     protected bool ricochet;
     protected int ricochetCounter, maxRicochetHits = -1;
-    protected override void Impact(Thing hitThing, bool blockedByShield = false)
+    public override void Impact(Thing hitThing, bool blockedByShield = false)
     {
         previousTargets.Add(hitThing);
         // prepare
         if (!InitialTarget.IsValid)
             InitialTarget = CurrentTarget = intendedTarget;
         if (!Shooter.IsValid && User is { })
-            previousTargets.Add(Shooter = User);
+            previousTargets.Add((PreviousTarget = Shooter = User).Thing);
 
         if (blockedByShield) goto impact;
 
@@ -48,28 +58,27 @@ public class RicochetBullet : Bullet
 
         // check and prepare ricochet
         if (weaponDamageMultiplier <= 0) goto impact;
-        ricochet &= RicochetChance(Def.RicochetChance + (Accuracy * Def.AccuracyFactor));
+        ricochet = RicochetChance(Def.RicochetChance + (Accuracy * Def.AccuracyFactor));
         ricochet &= ricochetCounter++ < maxRicochetHits;
         if (!ricochet) goto impact;
 
         weaponDamageMultiplier *= Def.RicochetDamageModifier;
 
         // search next target
-        var pawns = Map.listerThings.ThingsInGroup(ThingRequestGroup.Pawn);
 
-        LocalTargetInfo nextTarget = pawns
-                .OrderBy(x => x.Position.DistanceTo(Position))
-                .FirstOrDefault(x => !previousTargets.Contains(x) && CanHit(x, out _));
+        PreviousTarget = CurrentTarget;
 
-        if (!nextTarget.IsValid) goto impact;
+        CurrentTarget = FindNextTarget();
 
         // goto next target
-        CurrentTarget = nextTarget;
 
-        GoNext();
-        // 
+        ricochet = GoNext();
+        //
 
         impact:
+        if (ricochet)
+            RicochetSoundDefinitions.PlayRandomFor(this);
+        weaponDamageMultiplier = Mathf.Max(weaponDamageMultiplier, 0);
         base.Impact(hitThing, blockedByShield);
     }
     public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
@@ -79,7 +88,7 @@ public class RicochetBullet : Bullet
         base.Destroy(mode);
     }
 
-    public ThingWithComps Equipment { get; private set; }
+    public ThingWithComps Equipment { get; protected set; }
 
     public override void Launch(Thing launcher, Vector3 origin, LocalTargetInfo usedTarget, LocalTargetInfo intendedTarget, ProjectileHitFlags hitFlags, bool preventFriendlyFire = false, Thing equipment = null, ThingDef targetCoverDef = null)
     {
@@ -87,17 +96,22 @@ public class RicochetBullet : Bullet
         base.Launch(launcher, origin, usedTarget, intendedTarget, hitFlags, preventFriendlyFire, equipment, targetCoverDef);
     }
 
-    public bool CanHit(LocalTargetInfo target, out ShootLine shootLine)
+    public virtual bool CanHit(LocalTargetInfo target, out ShootLine shootLine)
     {
         shootLine = default;
-        Verb ??= Equipment.GetComp<CompEquippable>().AllVerbs.OfType<Verb_Shoot>().FirstOrDefault();//new() { caster = launcher, verbProps = new() { verbClass = typeof(Verb_LaunchProjectile) }, verbTracker = User?.verbTracker };
+        Verb ??= Equipment.GetComp<CompEquippable>().AllVerbs.OfType<Verb_Shoot>().FirstOrDefault();
         return Verb?.TryFindShootLineFromTo(Position, target, out shootLine) ?? false;
     }
 
-    public bool GoNext()
+    public virtual bool GoNext(bool preventFriendlyDamage = false) => GoTo(CurrentTarget, preventFriendlyDamage);
+    
+    /// <summary>
+    /// Copy-paste from Verb_LaunchProjectile
+    /// </summary>
+    public virtual bool GoTo(LocalTargetInfo target, bool preventFriendlyDamage = false)
     {
-        if (Verb is null) return false;
-        if (!CanHit(CurrentTarget, out var shootLine)) return false;
+        if (Verb is not { verbProps: { }, EquipmentSource: { } }) return false;
+        if (!target.IsValid || !CanHit(target, out var shootLine)) return false;
         var pawn = Shooter.Pawn;
         var equipment = Verb.EquipmentSource;
         var projectileHitFlags = ProjectileHitFlags.NonTargetWorld;
@@ -106,42 +120,58 @@ public class RicochetBullet : Bullet
             var num = Verb.verbProps.ForcedMissRadius;
             Pawn caster;
             if (pawn is not null && (caster = pawn) is not null)
-            {
                 num *= Verb.verbProps.GetForceMissFactorFor(equipment, caster);
-            }
-            float forcedMiss = VerbUtility.CalculateAdjustedForcedMiss(num, CurrentTarget.Cell - Position);
+            var forcedMiss = VerbUtility.CalculateAdjustedForcedMiss(num, target.Cell - Position);
             if (forcedMiss > 0.5f)
             {
                 var forcedMissTarget = GetForcedMissTarget(forcedMiss);
-                if (forcedMissTarget != CurrentTarget.Cell)
+                if (forcedMissTarget != target.Cell)
                 {
-                    if (Random.Chance(0.5f))
-                    {
+                    if (Rand.Chance(0.5f))
                         projectileHitFlags = ProjectileHitFlags.All;
-                    }
-                    Launch(pawn, DrawPos, forcedMissTarget, CurrentTarget, projectileHitFlags, false, equipment, null);
+                    Launch(pawn, DrawPos, forcedMissTarget, target, projectileHitFlags, preventFriendlyDamage, equipment, null);
                     return true;
                 }
             }
         }
-        var shotReport = ShotReport.HitReportFor(Verb.caster, Verb, CurrentTarget);
+        var shotReport = ShotReport.HitReportFor(User, Verb, target);
+        shotReport.covers = CoverUtility.CalculateCoverGiverSet(target, Position, Map);
+        shotReport.coversOverallBlockChance = CoverUtility.CalculateOverallBlockChance(target, Position, Map);
         var randomCoverToMissInto = shotReport.GetRandomCoverToMissInto();
-        var targetCoverDef = (randomCoverToMissInto is not null) ? randomCoverToMissInto.def : null;
-        if (CurrentTarget.Thing is not null)
+        var targetCoverDef = randomCoverToMissInto?.def;
+
+        if (Verb.verbProps.canGoWild && !Rand.Chance(shotReport.AimOnTargetChance_IgnoringPosture))
         {
-            Launch(pawn, DrawPos, CurrentTarget, CurrentTarget, ProjectileHitFlags.IntendedTarget, false, equipment, targetCoverDef);
+            shootLine.ChangeDestToMissWild(shotReport.AimOnTargetChance_StandardTarget);
+            Launch(pawn, DrawPos, shootLine.Dest, target, ProjectileHitFlags.NonTargetWorld, preventFriendlyDamage, equipment, targetCoverDef);
+            return true;
         }
-        else
+        if (target is { Thing.def.CanBenefitFromCover: true } && !Rand.Chance(shotReport.PassCoverChance))
         {
-            Launch(pawn, DrawPos, shootLine.Dest, CurrentTarget, ProjectileHitFlags.All, false, equipment, targetCoverDef);
+            Launch(pawn, DrawPos, randomCoverToMissInto, target, ProjectileHitFlags.NonTargetWorld, preventFriendlyDamage, equipment, targetCoverDef);
+            return true;
         }
+        projectileHitFlags = ProjectileHitFlags.IntendedTarget;
+
+        if (target.Thing is null or { def.Fillage: FillCategory.Full })
+            projectileHitFlags |= ProjectileHitFlags.NonTargetWorld;
+
+        Launch(pawn, DrawPos, PreviousTarget, target, projectileHitFlags, preventFriendlyDamage, equipment, targetCoverDef);
 
         return true;
     }
-    protected IntVec3 GetForcedMissTarget(float forcedMissRadius)
+    protected virtual IntVec3 GetForcedMissTarget(float forcedMissRadius)
     {
         int max = GenRadial.NumCellsInRadius(forcedMissRadius);
         int num = Rand.Range(0, max);
         return CurrentTarget.Cell + GenRadial.RadialPattern[num];
+    }
+
+    public override void ExposeData()
+    {
+        base.ExposeData();
+        Scribe_Values.Look(ref ricochet, nameof(ricochet));
+        Scribe_Values.Look(ref ricochetCounter, nameof(ricochetCounter));
+        Scribe_Values.Look(ref maxRicochetHits, nameof(maxRicochetHits));
     }
 }
