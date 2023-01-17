@@ -54,7 +54,7 @@ public class RicochetBullet : Bullet
         if (blockedByShield) goto impact;
 
         if(maxRicochetHits < 0)
-            maxRicochetHits = Random.Range(Mathf.Max(Def.MinRicochetHits, 0), Def.BaseMaxRicochetHits + Mathf.CeilToInt((Def.SkillMaxRicochetHits - Def.BaseMaxRicochetHits) * Accuracy));
+            maxRicochetHits = UnityEngine.Random.Range(Mathf.Max(Def.MinRicochetHits, 0), Def.BaseMaxRicochetHits + Mathf.CeilToInt((Def.SkillMaxRicochetHits - Def.BaseMaxRicochetHits) * Accuracy));
 
         // check and prepare ricochet
         if (weaponDamageMultiplier <= 0) goto impact;
